@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Arquillian Extensions</title>
+
+		<meta name="description" content="Arquillian Extensions">
+		<meta name="author" content="Michał Matłoka">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/beige.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/idea.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+				
+				<section data-transition="linear">
+					<!-- <h1>JBoss Arquillian</h1> -->
+					<img src="http://design.jboss.org/arquillian/logo/final/arquillian_logo_600px.png" style="width: 495.48735167183827px;  max-height: none; max-width: none; border:0px; box-shadow:none">
+					<h3>Extensions, which you have to take with you to a deserted island</h3>
+					<p>
+						<small>Michał Matłoka / <a href="http://twitter.com/mmatloka">@mmatloka</a></small>
+					</p>
+					 <aside class="notes">
+        Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
+    </aside>
+				</section>
+
+				<section data-transition="linear">
+					<h2>About me</h2>
+						<div style="float: left; width: 50%;">
+							<img src="img/poznan.jpg" style="font-size: 135.72px; width: 495.5348477998713px;  max-height: none; max-width: none;">
+							<img src="img/shrinkwrap.png" style="width: 495.48735167183827px;  max-height: none; max-width: none;">
+    						<img src="img/sml3.jpg" style="font-size: 135.72px; width: 495.5348477998713px;  max-height: none; max-width: none;">
+						</div>
+						<div style="float: right; width: 50%;">
+							<img src="img/jbcra.png" style="font-size: 135.72px; height: 492px; max-height: none; max-width: none;">
+						</div>
+				</section>
+
+				<section data-transition="linear">
+					<h2>Example situation</h2>
+					<div style="float: left; width: 50%;" class="fragment">
+							<img src="img/kajtek.jpg" style="font-size: 135.72px; width: 495.5348477998713px;  max-height: none; max-width: none;">
+							Kajtek
+						</div>
+						<div style="float: right; width: 50%;" class="fragment">
+							<p>Company with traditions</p>
+							<ul>
+								<li>JPA</li>
+								<li>JSF</li>
+								<li>No tests</li>
+							</ul>
+						</div>	
+				</section>
+
+				<section data-transition="linear">
+					<h2>JBoss Arquillian</h2>
+					<ul>
+						<li>Manages the lifecycle of the container (or containers)</li>
+						<li>Deploys archive (or archives) to the container (or containers)</li>
+						<li>Executes the tests inside (or against) the container</li>
+						<li>Captures the results and returnes them to the test runner for reporting</li>
+					</ul>
+				</section>
+
+				<section data-transition="linear">
+					<h2>Container adapters</h2>
+					<ul>
+						<li>JBoss AS/WildFly</li>
+						<li>GlassFish</li>
+						<li>WebLogic</li>
+						<li>WebSphere</li>
+						<li>Jetty</li>
+						<li>Tomcat</li>
+						<li>OSGi</li>
+						<li>Resin</li>
+						<li>OpenShift</li>
+						<li>Cloudbees</li>
+						<li>...</li>
+					</ul>
+				</section>
+
+				<section data-transition="linear">
+					<h2>Container types</h2>
+					<ul>
+						<li>Embedded</li>
+						<li>Managed</li>
+						<li>Remote</li>						
+					</ul>
+				</section>
+
+	<section data-transition="linear">
+					<h2>JBoss Arquillian</h2>
+				<pre><code data-trim contenteditable>
+@RunWith(Arquillian.class)
+public class SomeTest {
+
+    @Deployment
+    public static Archive&lt;?&gt; createDeployment() { return ... }
+
+    @Inject
+    private Something something;
+
+    @Test
+    public void should..() {
+    	...
+    }
+}
+</code></pre>
+</section>
+
+<!-- <section data-transition="linear">
+<pre><code data-trim contenteditable>
+public class Encourager {
+	
+    public static final String ENCOURAGE_TEXT = " Jesteś zwycięzcą!";
+ 
+    public String encourage(String name) {
+        return name + ENCOURAGE_TEXT;
+    }
+}
+</code></pre>
+</section> -->
+
+				<section data-transition="linear">
+					<h2>ShrinkWrap</h2>
+				<ul>
+					<li>Bundle the dependent classes and resources into an archive</li>
+				</ul>
+
+
+<pre class="fragment"><code data-trim contenteditable>
+WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
+	.addClass(User.class)
+ 	.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+</code></pre>
+<pre class="fragment"><code data-trim contenteditable>
+WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
+	.addClasses(User.class, ...)
+ 	.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+</code></pre>
+<pre class="fragment"><code data-trim contenteditable>
+WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
+	.addPackage(User.class.getPackage())
+ 	.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+</code></pre>
+</section>
+
+<!-- <section data-transition="linear">
+					<h2>ShrinkWrap</h2>
+<pre><code data-trim contenteditable>
+@RunWith(Arquillian.class)
+public class EncouragerTest {
+    @Deployment
+    public static WebArchive createDeployment() { return ... }
+
+    @Inject
+    private Encourager encourager;
+
+    @Test
+    public void shouldEcourageProperly() {
+    	// given
+    	final String name = "Kajtek";
+    	// when
+    	final String result = encourager.encourage(name);
+    	// then
+        assertEquals(result, name + encourager.ENCOURAGE_TEXT);
+}}
+</code></pre>
+</section> -->
+				<section data-transition="linear">
+					<h2>ShrinkWrap Resolver</h2>
+					<pre class="fragment"><code data-trim contenteditable>
+File[] files = Maven.resolver()
+		.resolve("G:A:V")
+		.withTransitivity()
+		.asFile();
+					</code></pre>
+					<pre class="fragment"><code data-trim contenteditable>
+File[] files = Maven.resolver()
+		.loadPomFromFile("/path/to/pom.xml")
+		.resolve("G:A")
+		.withTransitivity()
+		.asFile();
+					</code></pre>
+					<pre class="fragment"><code data-trim contenteditable>
+File[] files = Maven.resolver()
+		.loadPomFromFile("/path/to/pom.xml")
+		.importRuntimeDependencies()
+		.resolve().withTransitivity()
+		.asFile();
+					</code></pre>
+					<pre class="fragment"><code data-trim contenteditable>
+WebArchive webArchive = ShrinkWrap.create(MavenImporter.class)
+			.loadPomFromFile("/path/to/pom.xml")
+			.importBuildOutput()
+			.as(WebArchive.class);
+					</code></pre>
+
+					<pre class="fragment"><code data-trim contenteditable>
+WebArchive webArchive = ShrinkWrap
+			.create(EmbeddedGradleImporter.class)
+			.forProjectDirectory(dir)
+			.importBuildOutput()
+			.as(WebArchive.class);
+					</code></pre>
+					
+				</section>
+
+				<section data-transition="linear">
+					<h2>ShrinkWrap Descriptors</h2>
+					<blockquote class="fragment">
+							The goal is to provide most of the Java EE deployment descriptors. Each descriptor follows the same API style and allows to manipulate all elements as the specification describes.
+					</blockquote>
+				</section>
+<section data-transition="linear">
+	<h3>ShrinkWrap Descriptors - persistence.xml</h3>
+	<pre><code data-trim contenteditable>
+<persistence>
+   <persistence-unit name="myapp">
+      <provider>org.hibernate.ejb.HibernatePersistence</provider>
+      <jta-data-source>java:/DefaultDS</jta-data-source>
+      <properties>
+         <property name="hibernate.dialect" 
+                  value="org.hibernate.dialect.HSQLDialect"/>
+         <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+      </properties>
+   </persistence-unit>
+</persistence>   
+</code></pre>
+				</section>
+<section data-transition="linear">
+	<h3>ShrinkWrap Descriptors - code</h3>
+	<pre><code data-trim contenteditable>
+final PersistenceDescriptor persistence = Descriptors
+	.create(PersistenceDescriptor.class)
+            .createPersistenceUnit()
+               .name("myapp")
+               .provider("org.hibernate.ejb.HibernatePersistence")
+               .jtaDataSource("java:/DefaultDS")
+               .getOrCreateProperties()
+                  .createProperty().name("hibernate.dialect")
+                     .value("org.hibernate.dialect.HSQLDialect").up()
+                  .createProperty().name("hibernate.hbm2ddl.auto")
+                     .value("create-drop").up()
+               .up().up()
+</code></pre>
+					
+				</section>
+				<section data-transition="linear">
+					<h2>Arquillian Persistence Extension</h2>
+	<ul class="fragment">
+		<li>Wrapping each test in the seperated transaction</li>
+		<li>Database seeding using: DBUnit (XML, XLS, YAML, JSON), SQL scripts</li>
+		<li>DB state comparing with dataset at the end of the test</li>
+		<li>Eviction JPA second level cache between test method invocation</li>
+	</ul>
+				</section>
+				<section data-transition="linear">
+					<h3>Arquillian Persistence Extension - example part I</h3>
+<pre><code data-trim contenteditable>
+@Test
+@UsingDataSet("datasets/users.yml")
+@ShouldMatchDataSet("datasets/expected-users.yml")
+public void shouldChangeUserPassword() throws Exception {
+    // given
+    final String expectedPassword = "lubiePlacki";
+    final User user = em.find(User.class, 2L);
+
+    // when
+    user.setPassword(expectedPassword);
+    em.merge(user);
+
+    // then
+    assertThat(user.getPassword()).isEqualTo(expectedPassword);
+  }
+</code></pre>	
+				</section>
+
+	<section data-transition="linear">
+					<h3>Arquillian Persistence Extension - example part II</h3>
+<pre><code data-trim contenteditable>
+user:
+  - id: 1
+    firstname: John
+    lastname: Smith
+    username: doovde
+    password: password
+  - id: 2
+    firstname: Clark
+    lastname: Kent
+    username: superman
+    password: kryptonite
+</code></pre>	
+				</section>
+
+<section data-transition="linear">
+					<h2>Arquillian Drone</h2>
+<ul class="fragment">
+	<li>Integrates WebDriver with Arquillian</li>
+	<li>Interaction with deployments and containers provided by Arquillian</li>
+	<li>Configuration kept in arquillian.xml</li>
+	<li>Compatible with WebDriver (Selenium 2), Selenium 1 and Selenium Grids</li>
+</ul>
+				</section>
+		<section data-transition="linear">
+					<h2>Arquillian Drone - Example</h2>
+<pre><code data-trim contenteditable>
+
+@RunWith(Arquillian.class)
+public class WebDriverTest {
+
+    @Deployment(testable = false)
+    public static WebArchive createDeployment() ... 
+
+    @ArquillianResource
+    URL contextPath;
+ 
+    @Drone
+    WebDriver driver;  
+ 
+    @Test   
+    public void shouldNotLogin() {
+        driver.findElement(By.id("loginForm:login")).click();
+        ...
+}}
+
+</code></pre>	
+				</section>
+
+
+				<section data-transition="linear">
+					<h2>Arquillian Graphene</h2>
+<ul class="fragment">
+	<li>Extensions for WebDriver</li>
+	<li>PageObjects and PageFragments</li>
+	<li>AJAX support</li>
+</ul>
+				</section>
+				<section data-transition="linear">
+					<h3>Arquillian Graphene - example part I</h3>
+<pre><code data-trim contenteditable>
+@RunWith(Arquillian.class)
+public class TestLogin {
+ 
+    @Drone
+    WebDriver browser;
+ 
+    @Page
+    HomePage homePage;
+ 
+    @Test(expects = LoginFailedException.class)
+    public void testLoginFailed() {}
+        homePage.login("non-existent", "user");
+   }}
+</code></pre>	
+</section>
+
+<section data-transition="linear">
+					<h3>Arquillian Graphene - example part II</h3>
+<pre><code data-trim contenteditable>
+public class HomePage {
+ 
+    @FindBy(".login-form")
+    LoginDialog loginDialog;
+ 
+    @FindBy(".search")
+    AutocompleteComponent fulltextSearch;
+  
+    public void login(String user, String password) throws LoginFailedException {
+       loginDialog.setUser(user);
+       loginDialog.setPassword(password);
+       loginDialog.login();
+    }
+    ...
+}
+</code></pre>	
+</section>
+
+<section data-transition="linear">
+					<h3>Arquillian Graphene - example part III</h3>
+<pre><code data-trim contenteditable>
+public class LoginDialog {
+ 
+    @FindBy
+    private WebElement userName;
+ 
+    @FindBy(id = "login")
+    private WebElement loginButton;
+  
+    ....
+}
+</code></pre>	
+</section>
+				<section data-transition="linear">
+					<h2>Arquillian Graphene - ajax</h2>
+<pre><code data-trim contenteditable>
+Graphene.waitAjax().until().element(webElementOrBy).is().
+                                         .is().not().present();
+                                                    .enabled();
+                                                    .selected();
+                                                    .visible();
+</code></pre>	
+				</section>
+
+				<section data-transition="linear">
+					<h2>Arquillian Warp</h2>
+					<blockquote class="fragment">
+							Using Warp, you can initiate an HTTP request using a client-side testing tool such as WebDriver and, in the same request cycle, execute in-container server-side tests
+					</blockquote>
+		
+				</section>
+
+<section data-transition="linear">
+					<h2>Arquillian Warp</h2>
+					
+				<ul>
+					<li>Includes support for</li>
+					<ul>
+						<li>JSF</li>
+						<li>JAX-RS (REST)</li>
+						<li>Spring MVC</li>
+					</ul>
+				</ul>
+
+				</section>
+
+				
+				<section data-transition="linear">
+
+					<h3>Arquillian Warp - Example part I</h3>
+<pre><code data-trim contenteditable>
+@RunWith(Arquillian.class)
+@WarpTest
+@RunAsClient
+public class BasicTest { 
+    @Deployment
+    ...
+
+    @ArquillianResource
+    URL contextPath;
+
+    @Test
+    public void should...() {
+        Warp
+         .initiate(Activity)
+         .observe(Observer)
+         .inspect(Inspection);
+}}
+</code></pre>	
+
+				</section>
+
+<section data-transition="linear">
+					<h3>Arquillian Warp - Example part II</h3>
+<pre><code data-trim contenteditable>
+@Test
+public void shouldMakeProperRequest() {
+    Warp.initiate(new Activity() {
+      @Override
+      public void perform() {
+         browser.navigate().to(contextPath + "/cart");
+      }
+   }).group().observe(request().uri().endsWith("/cart"))
+   .inspect(inspection);
+}
+</code></pre>	
+</section>
+	<section data-transition="linear">
+					<h3>Arquillian Warp REST - Examplepart III - rest </h3>
+				
+<pre><code data-trim contenteditable>
+Inspection inspection = new Inspection() {
+  private static final long serialVersionUID = 1L;
+
+  @ArquillianResource
+  private RestContext restContext;
+
+  @AfterServlet
+  public void testGetStocks() {
+   assertThat(restContext.getHttpRequest().getMethod()).isEqualTo(HttpMethod.GET);
+   assertThat(restContext.getHttpResponse().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
+   assertThat(restContext.getHttpResponse().getContentType()).isEqualTo("application/json");
+
+   List list = (List) restContext.getHttpResponse().getEntity();
+   assertThat(list.size()).isEqualTo(1);
+   }
+}
+</code></pre>	
+				</section>
+						
+
+<section data-transition="linear">
+					<h2>Arquillian Droidium</h2>
+<ul class="fragment">
+	<li>Includes container adapter</li>
+	<li>Device and emulator management</li>
+	<li>Can create AVD (Android Virtual Device)</li>
+	<li>Arquillian Droidium Web - Selenium integration</li>
+	<li>Arquillian Droidium Native - Selendroid integration</li>
+	<li>Can take screeshots</li>
+	<li>Early Alpha</li>
+</ul>	
+</section>
+
+				<section data-transition="linear">
+					<h2>Arquillian Droidium - Example</h2>
+<pre><code data-trim contenteditable>
+@RunWith(Arquillian.class)
+@RunAsClient
+public class DroidiumWebTestCase {
+    @Deployment
+    @TargetsContainer("jbossas")
+    public static Archive&lt;?&gt; getDeployment() {
+        return ShrinkWrap
+        .createFromZipFile(WebArchive.class, new File("shop.war"));
+    }
+    @Test
+    @OperateOnDeployment("jbossas")
+    public void test01(@Drone AndroidDriver driver, 
+        @ArquillianResource URL deploymentURL) {L        
+        driver.get(deploymentURL.toString());
+        assertTrue(driver.getPageSource().contains("Shop"));
+    }}
+</code></pre>	
+				</section>
+
+				<section data-transition="linear">
+					<h2>Arquillian Droidium - Example</h2>
+<pre><code data-trim contenteditable>
+@RunWith(Arquillian.class)
+@RunAsClient
+public class DroidiumSelendroidTestCase {
+  @Deployment
+  @Instrumentable
+  public static Archive&lt;?&gt; getDeployment() {
+      return ShrinkWrap
+     .createFromZipFile(JavaArchive.class, new File("shop.apk"));
+  }
+  @Test
+  public void example(@ArquillianResource AndroidDevice android, 
+      @Drone WebDriver driver) {
+      android.getActivityManagerProvider().getActivityManager()
+        .startActivity("com.shop.HomeScreenActivity")
+      WebElement button = driver
+         .findElement(By.id("cartButton"));
+      ...  }}
+</code></pre>	
+				</section>
+
+				<section data-transition="linear">
+					<h2>Arquillian Performance - Example</h2>
+<pre><code data-trim contenteditable>
+@PerformanceTest(resultsThreshold=2) 
+// checks if resultsThreshold * newTime < oldTime
+@RunWith(Arquillian.class)
+public class RecommendationBuildingTest {
+    @Deployment
+    public static JavaArchive createDeployment() {
+        return ...
+    }
+ 
+    @Inject RecommendationService recommendationService;
+ 
+    @Test
+    @Performance(time=20) // timeout in ms
+    public void doHardWork() throws Exception {
+        ...
+    }
+}	
+</code></pre>	
+				</section>
+				
+				<section data-transition="linear">
+					<h2>Other extensions</h2>
+					<ul>
+						<li>Extension Byteman</li>
+						<li>Google Guice Extension</li>
+						<li>GWT Testing extension</li>
+						<li>Extension Jacoco</li>
+						<li>Extension JRebel</li>
+						<li>screenRecorder</li>
+						<li>Spring Framework Extension</li>
+						<li>arquillian-ios-aggregator</li>
+						<li>arquillian-extension-qunit</li>
+						<li>Spock Arquillian Extension</li>		
+						<li>ShrinkWrap DSL</li>					
+					</ul>
+				</section>
+				<section data-transition="linear">
+					<h2>Take aways</h2>
+					<ul>
+						<li>ShrinkWrap - archives</li>
+						<li>ShrinkWrap Resolver - maven, gradle</li>
+						<li>ShrinkWrap Descriptors - fluent API code generation from XSD</li>
+						<li>Arquillian Persistence Extension - DB</li>
+						<li>Arquillian Drone - WebDriver integration - UI</li>
+						<li>Arquillian Graphene - extended WebDriver - better UI</li>
+						<li>Arquillian Warp - client-side request, server-side test - REST, Spring MVC...</li>
+						<li>Arquillian Droidium - Android Browser, Android UI</li>
+						<li>Arquillian Performance - timeouts, execution time comparision</li>
+					</ul>
+				</section>
+
+				<section data-transition="linear">
+					<h2>Materials & help</h2>
+					<ul>
+						<li><a href="http://arquillian.org">http://arquillian.org</a></li>
+						<li><a href="http://arquillian.org/guides/">http://arquillian.org/guides/</a></li>
+						<li><a href="https://docs.jboss.org/author/display/ARQ/Reference+Guide">https://docs.jboss.org/author/display/ARQ/Reference+Guide</a></li>
+						<li><a href="https://github.com/arquillian/">https://github.com/arquillian/</a></li>
+						<li><a href="https://github.com/shrinkwrap/">https://github.com/shrinkwrap/</a></li>
+						<li><a href="https://community.jboss.org/">https://community.jboss.org/</a></li>
+						<li><a href="http://jira.jboss.org/">http://jira.jboss.org/</a></li>
+						<li>irc.freenode.net - #arquillian, #jbosstesting</li>
+					</ul>
+				</section>
+
+				<section data-transition="linear">
+					<div style="float: left; width: 50%;" class="fragment">
+						<img src="img/kajtek.jpg" style="font-size: 135.72px; width: 495.5348477998713px;  max-height: none; max-width: none;">
+					</div>
+					<div style="float: right; width: 50%;" class="fragment">
+						<img src="img/kajtek-open.jpg" style="font-size: 135.72px; width: 495.5348477998713px;  max-height: none; max-width: none;">
+						<p data-transition="linear">http://meninblack.wikia.com/</p>
+					</div>	
+					
+				</section>
+
+
+				<section data-transition="linear">
+					<h1>THE END</h1>		
+					<h3>Questions?</h3>								
+					mmatloka @ gmail.com
+					<a href="https://github.com/mmatloka/presentations">https://github.com/mmatloka/presentations</a>
+					<aside class="notes">
+        				Mile widziane uwagi do prezentacji, również te negatywne na mejla lub na przerwie.        				
+    				</aside>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
